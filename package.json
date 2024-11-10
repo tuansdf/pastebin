@@ -1,5 +1,5 @@
 {
-  "name": "pbin-remix",
+  "name": "pastebin",
   "private": true,
   "sideEffects": false,
   "type": "module",

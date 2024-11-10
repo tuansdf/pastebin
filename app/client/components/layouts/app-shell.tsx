@@ -23,7 +23,7 @@ export const AppShell = ({ children }: Props) => {
     >
       <AppShellM.Header className={classes["header"]}>
         <Burger opened={opened} onClick={toggle} size="sm" />
-        <div>Pbin</div>
+        <div>Pastebin</div>
       </AppShellM.Header>
 
       <AppShellM.Navbar p="sm">

@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "pbin",
+      name: "pastebin",
       script: "npm",
       args: "start",
       instances: 1,
