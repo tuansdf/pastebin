@@ -1,8 +1,4 @@
 import { ENV } from "@/.server/constants/env.constant";
-import { drizzle } from "drizzle-orm/libsql";
+import { drizzle } from "drizzle-orm/better-sqlite3";
 
-export const db = drizzle({
-  connection: {
-    url: ENV.DB_URL,
-  },
-});
+export const db = drizzle(ENV.DB_URL);

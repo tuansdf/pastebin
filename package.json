@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
-    "@libsql/client": "^0.14.0",
     "@mantine/core": "^7.13.4",
     "@mantine/hooks": "^7.13.4",
     "@mantine/modals": "^7.13.4",
@@ -26,6 +25,7 @@
     "@scure/base": "^1.1.9",
     "@tabler/icons-react": "^3.21.0",
     "axios": "^1.7.7",
+    "better-sqlite3": "^11.5.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "drizzle-orm": "^0.36.0",
@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "@remix-run/dev": "^2.13.1",
+    "@types/better-sqlite3": "^7.6.11",
     "@types/node": "^22",
     "@types/pako": "^2.0.3",
     "@types/react": "^18.3.12",
