@@ -1,36 +1,36 @@
-import { HistoryItem } from "@/client/features/vaults/history-item";
-import { useAppStore } from "@/client/stores/app.store";
+import { HistoryItem } from "@/client/components/shared/history-item";
+import { useAppStore } from "@/client/shared/app.store";
 import { Alert, Box, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useMemo } from "react";
 
-export const LinkHistory = () => {
-  const { shortUrls, removeShortUrl } = useAppStore();
+export const NoteHistory = () => {
+  const { noteUrls, removeNoteUrl } = useAppStore();
 
-  const shortUrlsArr = useMemo(() => {
-    if (!shortUrls) return;
-    return Array.from(shortUrls);
-  }, [shortUrls]);
+  const noteUrlsArr = useMemo(() => {
+    if (!noteUrls) return;
+    return Array.from(noteUrls);
+  }, [noteUrls]);
 
-  if (!shortUrlsArr?.length) {
+  if (!noteUrlsArr?.length) {
     return <Alert color="blue" title="Nothing..." />;
   }
 
   const handleDelete = (item: string) => {
     modals.openConfirmModal({
-      title: "Delete short link",
-      children: <Text size="sm">Are you sure you want to delete this URL?</Text>,
+      title: "Delete note",
+      children: <Text size="sm">Are you sure you want to delete this note?</Text>,
       labels: { confirm: "Confirm", cancel: "Cancel" },
       confirmProps: { color: "red" },
       onConfirm: () => {
-        removeShortUrl(item);
+        removeNoteUrl(item);
       },
     });
   };
 
   return (
     <Box className="k-history-container">
-      {shortUrlsArr.map((item) => {
+      {noteUrlsArr.map((item) => {
         if (!item) return null;
         return (
           <HistoryItem

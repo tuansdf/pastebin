@@ -1,14 +1,16 @@
-import { useDisclosure } from "@/client/hooks/use-disclosure";
 import { AppShell as MAppShell, Box, Burger, Container, Drawer, NavLink } from "@mantine/core";
 import { Link, useLocation } from "@remix-run/react";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useState } from "react";
 
 type Props = PropsWithChildren;
 
 export const AppShell = ({ children }: Props) => {
   const location = useLocation();
   const pathname = location.pathname;
-  const [opened, { toggle, close }] = useDisclosure(false);
+  const [opened, setOpened] = useState(false);
+
+  const close = () => setOpened(false);
+  const toggle = () => setOpened((prev) => !prev);
 
   return (
     <MAppShell header={{ height: 52 }} padding="md">

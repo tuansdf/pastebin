@@ -1,6 +1,6 @@
-import { ErrorMessage } from "@/client/components/error";
-import { ScreenLoading } from "@/client/components/screen-loading";
-import { VaultDeleteModal } from "@/client/features/vaults/vault-delete-modal";
+import { ErrorMessage } from "@/client/components/shared/error";
+import { ScreenLoading } from "@/client/components/shared/screen-loading";
+import { VaultDeleteModal } from "@/client/components/vaults/vault-delete-modal";
 import { VaultConfigs } from "@/.server/vault.type";
 import { decryptText } from "@/shared/utils/crypto.util";
 import { Button, Group, Textarea } from "@mantine/core";

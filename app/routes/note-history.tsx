@@ -1,4 +1,4 @@
-import { NoteHistory } from "@/client/features/notes/note-history";
+import { NoteHistory } from "@/client/components/notes/note-history";
 import { Title } from "@mantine/core";
 
 export default function Page() {

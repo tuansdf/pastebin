@@ -1,7 +1,7 @@
 import { DecryptVaultFormValues, EncryptionConfigs, VaultConfigs } from "@/.server/vault.type";
-import { ErrorMessage } from "@/client/components/error";
-import { ScreenLoading } from "@/client/components/screen-loading";
-import { useAppStore } from "@/client/stores/app.store";
+import { ErrorMessage } from "@/client/components/shared/error";
+import { ScreenLoading } from "@/client/components/shared/screen-loading";
+import { useAppStore } from "@/client/shared/app.store";
 import { decryptVaultFormSchema } from "@/shared/schemas/vault.schema";
 import { decryptText, hashPassword } from "@/shared/utils/crypto.util";
 import { zodResolver } from "@hookform/resolvers/zod";

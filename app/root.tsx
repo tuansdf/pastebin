@@ -1,10 +1,10 @@
 import { AppShell } from "@/client/components/layouts/app-shell";
-import { MantineProvider } from "@/client/lib/mantine-provider";
+import { MantineProvider } from "@/client/components/shared/mantine-provider";
 import { ColorSchemeScript } from "@mantine/core";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
 import { PropsWithChildren } from "react";
 
-import "@/client/styles/styles.scss";
+import "@/client/shared/globals.scss";
 
 export function Layout({ children }: PropsWithChildren) {
   return (

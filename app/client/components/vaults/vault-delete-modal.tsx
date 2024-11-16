@@ -1,9 +1,8 @@
-import { deleteVault, getVaultConfigs } from "@/client/api/vault.api";
-import { ErrorMessage } from "@/client/components/error";
-import { ScreenLoading } from "@/client/components/screen-loading";
-import { useDisclosure } from "@/client/hooks/use-disclosure";
-import { deleteVaultFormSchema } from "@/shared/schemas/vault.schema";
 import { DeleteVaultFormValues } from "@/.server/vault.type";
+import { ErrorMessage } from "@/client/components/shared/error";
+import { ScreenLoading } from "@/client/components/shared/screen-loading";
+import { deleteVault, getVaultConfigs } from "@/client/shared/vault.api";
+import { deleteVaultFormSchema } from "@/shared/schemas/vault.schema";
 import { generateHashConfigsWithSalt, hashPassword } from "@/shared/utils/crypto.util";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Modal, PasswordInput } from "@mantine/core";
@@ -18,9 +17,12 @@ type Props = {
 
 export const VaultDeleteModal = ({ id }: Props) => {
   const router = useNavigate();
-  const [opened, { close, open }] = useDisclosure();
+  const [opened, setOpened] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+
+  const open = () => setOpened(true);
+  const close = () => setOpened(false);
 
   const {
     handleSubmit,

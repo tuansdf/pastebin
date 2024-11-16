@@ -1,5 +1,5 @@
-import { NotFound } from "@/client/components/not-found";
-import { NoteDetail } from "@/client/features/notes/note-detail";
+import { NotFound } from "@/client/components/shared/not-found";
+import { NoteDetail } from "@/client/components/notes/note-detail";
 import { vaultService } from "@/.server/vault.service";
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";

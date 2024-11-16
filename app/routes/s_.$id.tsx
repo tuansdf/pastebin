@@ -1,6 +1,6 @@
 import { vaultService } from "@/.server/vault.service";
-import { NotFound } from "@/client/components/not-found";
-import { LinkDetail } from "@/client/features/links/link-detail";
+import { NotFound } from "@/client/components/shared/not-found";
+import { LinkDetail } from "@/client/components/links/link-detail";
 import { Box } from "@mantine/core";
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
