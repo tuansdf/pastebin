@@ -83,7 +83,7 @@ export const NoteAdd = () => {
     <>
       <Box pos="relative">
         <Box component="form" onSubmit={handleSubmit(handleFormSubmit)}>
-          <Title mb="xs" order={1} size="h2">
+          <Title mb="xs" order={1} size="h3">
             Editor
           </Title>
           <Textarea

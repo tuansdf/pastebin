@@ -58,7 +58,9 @@ export const AppShell = ({ children }: Props) => {
       </Drawer>
 
       <MAppShell.Main>
-        <Container size="120rem">{children}</Container>
+        <Container p={0} size="120rem">
+          {children}
+        </Container>
       </MAppShell.Main>
     </MAppShell>
   );
