@@ -1,8 +1,8 @@
 import { CreateVaultFormValues } from "@/.server/vault.type";
-import { createVault } from "@/client/shared/vault.api";
 import { ErrorMessage } from "@/client/components/shared/error";
 import { ScreenLoading } from "@/client/components/shared/screen-loading";
 import { useAppStore } from "@/client/shared/app.store";
+import { createVault } from "@/client/shared/vault.api";
 import {
   DEFAULT_LINK_ID_SIZE,
   DEFAULT_NOTE_ID_SIZE,
@@ -96,8 +96,8 @@ export const LinkAdd = () => {
   return (
     <>
       <Card component="form" onSubmit={handleSubmit(handleFormSubmit)} className="k-card-form">
-        <Title>{isShortUrl ? "Shorten" : "Mask"} a URL</Title>
         <Switch checked={isShortUrl} onChange={(e) => setIsShortUrl(e.currentTarget.checked)} label="Short URL" />
+        <Title size="h3">{isShortUrl ? "Shorten" : "Mask"} a URL</Title>
         <TextInput
           autoComplete="off"
           autoFocus
