@@ -21,13 +21,7 @@ export const AppShell = ({ children }: Props) => {
 
       <Drawer opened={opened} onClose={close} title="Pastebin">
         <Box>
-          <NavLink
-            to="/create-note"
-            label="Create a note"
-            component={Link}
-            active={pathname === "/create-note"}
-            onClick={close}
-          />
+          <NavLink to="/" label="Create a note" component={Link} active={pathname === "/"} onClick={close} />
           <NavLink
             to="/note-history"
             label="Note history"
