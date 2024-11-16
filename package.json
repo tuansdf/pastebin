@@ -23,7 +23,7 @@
     "@remix-run/react": "^2.13.1",
     "@remix-run/serve": "^2.13.1",
     "@scure/base": "^1.1.9",
-    "@tabler/icons-react": "^3.21.0",
+    "@tabler/icons-react": "3.17.0",
     "axios": "^1.7.7",
     "better-sqlite3": "^11.5.0",
     "clsx": "^2.1.1",

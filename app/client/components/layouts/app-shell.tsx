@@ -1,8 +1,7 @@
 import { useDisclosure } from "@/client/hooks/use-disclosure";
-import { AppShell as AppShellM, Box, Burger, NavLink } from "@mantine/core";
+import { AppShell as MAppShell, Box, Burger, Container, Drawer, NavLink } from "@mantine/core";
 import { Link, useLocation } from "@remix-run/react";
 import { PropsWithChildren } from "react";
-import classes from "./app-shell.module.scss";
 
 type Props = PropsWithChildren;
 
@@ -12,70 +11,55 @@ export const AppShell = ({ children }: Props) => {
   const [opened, { toggle, close }] = useDisclosure(false);
 
   return (
-    <AppShellM
-      header={{ height: 52 }}
-      navbar={{
-        width: 300,
-        breakpoint: "sm",
-        collapsed: { mobile: !opened, desktop: !opened },
-      }}
-      padding="md"
-    >
-      <AppShellM.Header className={classes["header"]}>
+    <MAppShell header={{ height: 52 }} padding="md">
+      <MAppShell.Header className="k-header">
         <Burger opened={opened} onClick={toggle} size="sm" />
         <div>Pastebin</div>
-      </AppShellM.Header>
+      </MAppShell.Header>
 
-      <AppShellM.Navbar p="sm">
-        <NavLink
-          to="/create-note"
-          label="Create a note"
-          component={Link}
-          active={pathname === "/create-note"}
-          onClick={close}
-        />
-        <NavLink
-          to="/note-history"
-          label="Note history"
-          component={Link}
-          active={pathname === "/note-history"}
-          onClick={close}
-        />
-        <NavLink
-          to="/create-link"
-          label="Shorten a URL"
-          component={Link}
-          active={pathname === "/create-link"}
-          onClick={close}
-        />
-        <NavLink
-          to="/mask-link"
-          label="Mask a URL"
-          component={Link}
-          active={pathname === "/mask-link"}
-          onClick={close}
-        />
-        <NavLink
-          to="/link-history"
-          label="URL history"
-          component={Link}
-          active={pathname === "/link-history"}
-          onClick={close}
-        />
-        <NavLink
-          to="/password-history"
-          label="Password history"
-          component={Link}
-          active={pathname === "/password-history"}
-          onClick={close}
-        />
-      </AppShellM.Navbar>
-
-      <AppShellM.Main>
-        <Box maw="120rem" mx="auto">
-          {children}
+      <Drawer opened={opened} onClose={close} title="Pastebin">
+        <Box>
+          <NavLink
+            to="/create-note"
+            label="Create a note"
+            component={Link}
+            active={pathname === "/create-note"}
+            onClick={close}
+          />
+          <NavLink
+            to="/note-history"
+            label="Note history"
+            component={Link}
+            active={pathname === "/note-history"}
+            onClick={close}
+          />
+          <NavLink
+            to="/create-link"
+            label="Shorten a URL"
+            component={Link}
+            active={pathname === "/create-link"}
+            onClick={close}
+          />
+          <NavLink
+            to="/mask-link"
+            label="Mask a URL"
+            component={Link}
+            active={pathname === "/mask-link"}
+            onClick={close}
+          />
+          <NavLink
+            to="/link-history"
+            label="URL history"
+            component={Link}
+            active={pathname === "/link-history"}
+            onClick={close}
+          />
         </Box>
-      </AppShellM.Main>
-    </AppShellM>
+      </Drawer>
+
+      <MAppShell.Main>
+        <Container size="120rem">{children}</Container>
+      </MAppShell.Main>
+    </MAppShell>
   );
 };

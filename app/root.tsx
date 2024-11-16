@@ -2,10 +2,11 @@ import { AppShell } from "@/client/components/layouts/app-shell";
 import { MantineProvider } from "@/client/lib/mantine-provider";
 import { ColorSchemeScript } from "@mantine/core";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
+import { PropsWithChildren } from "react";
 
 import "@/client/styles/styles.scss";
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
       <head>

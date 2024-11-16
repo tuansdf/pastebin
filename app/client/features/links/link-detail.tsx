@@ -1,9 +1,8 @@
+import { DecryptVaultFormValues, EncryptionConfigs, VaultConfigs } from "@/.server/vault.type";
 import { ErrorMessage } from "@/client/components/error";
 import { ScreenLoading } from "@/client/components/screen-loading";
 import { useAppStore } from "@/client/stores/app.store";
-import fclasses from "@/client/styles/form.module.scss";
 import { decryptVaultFormSchema } from "@/shared/schemas/vault.schema";
-import { DecryptVaultFormValues, EncryptionConfigs, VaultConfigs } from "@/.server/vault.type";
 import { decryptText, hashPassword } from "@/shared/utils/crypto.util";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, PasswordInput, Text, Title } from "@mantine/core";
@@ -126,7 +125,7 @@ export const LinkDetail = ({ item }: Props) => {
         pos="relative"
         component="form"
         onSubmit={handleSubmit(handleFormSubmit)}
-        className={fclasses["form"]}
+        className="k-card-form"
         maw="28rem"
         mb="md"
         style={{

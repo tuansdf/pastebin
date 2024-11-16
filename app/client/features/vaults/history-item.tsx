@@ -1,4 +1,5 @@
-import { Button, Card, Text } from "@mantine/core";
+import { ActionIcon, Button, Card, Text } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
 import { ReactNode } from "react";
 
 type Props = {
@@ -8,13 +9,13 @@ type Props = {
 
 export const HistoryItem = ({ text, onDelete }: Props) => {
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder w="100%">
+    <Card className="k-history-item">
       {typeof text === "string" ? <Text>{text}</Text> : text}
 
-      <Button.Group mt="sm">
-        <Button color="red" onClick={onDelete}>
-          Delete
-        </Button>
+      <Button.Group>
+        <ActionIcon color="red" onClick={onDelete} size="md">
+          <IconTrash size={20} />
+        </ActionIcon>
       </Button.Group>
     </Card>
   );

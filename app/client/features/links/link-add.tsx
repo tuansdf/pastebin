@@ -1,8 +1,8 @@
+import { CreateVaultFormValues } from "@/.server/vault.type";
 import { createVault } from "@/client/api/vault.api";
 import { ErrorMessage } from "@/client/components/error";
 import { ScreenLoading } from "@/client/components/screen-loading";
 import { useAppStore } from "@/client/stores/app.store";
-import fclasses from "@/client/styles/form.module.scss";
 import {
   DEFAULT_LINK_ID_SIZE,
   VAULT_EXPIRE_1_DAY,
@@ -11,7 +11,7 @@ import {
   VAULT_EXPIRE_1_WEEK,
 } from "@/shared/constants/common.constant";
 import { createLinkFormSchema } from "@/shared/schemas/vault.schema";
-import { CreateVaultFormValues } from "@/.server/vault.type";
+import { getVaultExpiresTime } from "@/shared/utils/common.util";
 import {
   encryptText,
   generateEncryptionConfigs,
@@ -23,7 +23,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, CopyButton, Group, NativeSelect, PasswordInput, TextInput, Title } from "@mantine/core";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { getVaultExpiresTime } from "@/shared/utils/common.util";
 
 const defaultFormValues: CreateVaultFormValues = {
   content: "",
@@ -68,7 +67,7 @@ export const LinkAdd = () => {
           masterPassword: masterPassword,
           expiresAt: getVaultExpiresTime(Number(data.expiresAt)),
         },
-        DEFAULT_LINK_ID_SIZE,
+        DEFAULT_LINK_ID_SIZE
       );
       addPassword(password);
       const shortLink = window.location.origin + `/s/${body.publicId}`;
@@ -91,17 +90,7 @@ export const LinkAdd = () => {
 
   return (
     <>
-      <Card
-        shadow="sm"
-        padding="lg"
-        radius="md"
-        pos="relative"
-        component="form"
-        onSubmit={handleSubmit(handleFormSubmit)}
-        className={fclasses["form"]}
-        maw="30rem"
-        mb="md"
-      >
+      <Card component="form" onSubmit={handleSubmit(handleFormSubmit)} className="k-card-form">
         <Title>Shorten a URL</Title>
         <TextInput
           autoComplete="off"

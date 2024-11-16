@@ -1,7 +1,6 @@
 import { HistoryItem } from "@/client/features/vaults/history-item";
 import { useAppStore } from "@/client/stores/app.store";
-import classes from "@/client/styles/history.module.scss";
-import { Alert, Text } from "@mantine/core";
+import { Alert, Box, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useMemo } from "react";
 
@@ -13,7 +12,7 @@ export const LinkHistory = () => {
     return Array.from(shortUrls);
   }, [shortUrls]);
 
-  if (!shortUrlsArr) {
+  if (!shortUrlsArr?.length) {
     return <Alert color="blue" title="Nothing..." />;
   }
 
@@ -30,7 +29,7 @@ export const LinkHistory = () => {
   };
 
   return (
-    <div className={classes["container"]}>
+    <Box className="k-history-container">
       {shortUrlsArr.map((item) => {
         if (!item) return null;
         return (
@@ -38,13 +37,13 @@ export const LinkHistory = () => {
             key={item}
             onDelete={() => handleDelete(item)}
             text={
-              <Text component="a" target="_blank" href={item} truncate="end" c="blue" td="underline">
+              <Text component="a" target="_blank" href={item} truncate="end" c="blue">
                 {item}
               </Text>
             }
           />
         );
       })}
-    </div>
+    </Box>
   );
 };

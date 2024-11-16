@@ -1,5 +1,6 @@
+import { HistoryItem } from "@/client/features/vaults/history-item";
 import { useAppStore } from "@/client/stores/app.store";
-import { Alert, List } from "@mantine/core";
+import { Alert, Box, Text } from "@mantine/core";
 import { useMemo } from "react";
 
 export const NoteHistory = () => {
@@ -10,22 +11,25 @@ export const NoteHistory = () => {
     return Array.from(noteUrls);
   }, [noteUrls]);
 
-  if (!noteUrlsArr) {
+  if (!noteUrlsArr?.length) {
     return <Alert color="blue" title="Nothing..." />;
   }
 
   return (
-    <List>
+    <Box className="k-history-container">
       {noteUrlsArr.map((item) => {
         if (!item) return null;
         return (
-          <List.Item key={item}>
-            <a target="_blank" href={item}>
-              {item}
-            </a>
-          </List.Item>
+          <HistoryItem
+            key={item}
+            text={
+              <Text component="a" target="_blank" href={item} truncate="end" c="blue">
+                {item}
+              </Text>
+            }
+          />
         );
       })}
-    </List>
+    </Box>
   );
 };
