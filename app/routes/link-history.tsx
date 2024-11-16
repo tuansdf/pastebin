@@ -4,7 +4,9 @@ import { Title } from "@mantine/core";
 export default function Page() {
   return (
     <>
-      <Title mb="md">URL history</Title>
+      <Title mb="md" size="h3">
+        URL history
+      </Title>
 
       <LinkHistory />
     </>
