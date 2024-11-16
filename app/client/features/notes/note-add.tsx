@@ -1,8 +1,7 @@
+import { CreateVaultFormValues } from "@/.server/vault.type";
 import { createVault } from "@/client/api/vault.api";
 import { ScreenLoading } from "@/client/components/screen-loading";
 import { useAppStore } from "@/client/stores/app.store";
-import { createNoteFormSchema } from "@/shared/schemas/vault.schema";
-import { CreateVaultFormValues } from "@/.server/vault.type";
 import {
   DEFAULT_NOTE_ID_SIZE,
   VAULT_EXPIRE_1_DAY,
@@ -10,6 +9,7 @@ import {
   VAULT_EXPIRE_1_MONTH,
   VAULT_EXPIRE_1_WEEK,
 } from "@/shared/constants/common.constant";
+import { createNoteFormSchema } from "@/shared/schemas/vault.schema";
 import { getVaultExpiresTime } from "@/shared/utils/common.util";
 import {
   encryptText,
@@ -82,10 +82,11 @@ export const NoteAdd = () => {
   return (
     <>
       <Box pos="relative">
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <Title mb="md">Create a note</Title>
+        <Box component="form" onSubmit={handleSubmit(handleFormSubmit)}>
+          <Title mb="xs" order={1} size="h2">
+            Editor
+          </Title>
           <Textarea
-            label="Content"
             autoComplete="off"
             autoFocus
             rows={20}
@@ -105,7 +106,7 @@ export const NoteAdd = () => {
           <Button mt="md" type="submit">
             Submit
           </Button>
-        </form>
+        </Box>
       </Box>
       <ScreenLoading isLoading={isLoading} />
     </>
