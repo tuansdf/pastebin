@@ -1,5 +1,5 @@
 import { createVaultRequestSchema } from "@/shared/schemas/vault.schema";
-import { vaultService } from "@/.server/features/vault/vault.service";
+import { vaultService } from "@/.server/vault.service";
 import { exceptionUtils } from "@/shared/exceptions/exception.util";
 import { ActionFunctionArgs, json } from "@remix-run/node";
 

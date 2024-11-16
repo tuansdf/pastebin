@@ -11,7 +11,7 @@ import {
   VAULT_EXPIRE_1_WEEK,
 } from "@/shared/constants/common.constant";
 import { createLinkFormSchema } from "@/shared/schemas/vault.schema";
-import { CreateVaultFormValues } from "@/.server/features/vault/vault.type";
+import { CreateVaultFormValues } from "@/.server/vault.type";
 import {
   encryptText,
   generateEncryptionConfigs,

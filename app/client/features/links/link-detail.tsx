@@ -3,7 +3,7 @@ import { ScreenLoading } from "@/client/components/screen-loading";
 import { useAppStore } from "@/client/stores/app.store";
 import fclasses from "@/client/styles/form.module.scss";
 import { decryptVaultFormSchema } from "@/shared/schemas/vault.schema";
-import { DecryptVaultFormValues, EncryptionConfigs, VaultConfigs } from "@/.server/features/vault/vault.type";
+import { DecryptVaultFormValues, EncryptionConfigs, VaultConfigs } from "@/.server/vault.type";
 import { decryptText, hashPassword } from "@/shared/utils/crypto.util";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, PasswordInput, Text, Title } from "@mantine/core";

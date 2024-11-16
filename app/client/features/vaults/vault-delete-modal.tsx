@@ -3,7 +3,7 @@ import { ErrorMessage } from "@/client/components/error";
 import { ScreenLoading } from "@/client/components/screen-loading";
 import { useDisclosure } from "@/client/hooks/use-disclosure";
 import { deleteVaultFormSchema } from "@/shared/schemas/vault.schema";
-import { DeleteVaultFormValues } from "@/.server/features/vault/vault.type";
+import { DeleteVaultFormValues } from "@/.server/vault.type";
 import { generateHashConfigsWithSalt, hashPassword } from "@/shared/utils/crypto.util";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Modal, PasswordInput } from "@mantine/core";
