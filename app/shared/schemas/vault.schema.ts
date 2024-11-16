@@ -107,12 +107,20 @@ export const deleteVaultFormSchema: z.ZodType<DeleteVaultFormValues> = z.object(
   password: passwordSchema,
 });
 
-export const createLinkFormSchema: z.ZodType<CreateVaultFormValues> = z.object({
-  content: urlSchema,
-  password: stringOrUndefined.pipe(passwordSchema.optional()),
-  masterPassword: stringOrUndefined.pipe(passwordSchema.optional()),
-  expiresAt: z.coerce.number().optional(),
-});
+export const createLinkFormSchema = (short?: boolean): z.ZodType<CreateVaultFormValues> =>
+  short
+    ? z.object({
+        content: urlSchema,
+        password: passwordSchema.optional(),
+        masterPassword: stringOrUndefined.pipe(passwordSchema.optional()),
+        expiresAt: z.coerce.number().optional(),
+      })
+    : z.object({
+        content: urlSchema,
+        password: stringOrUndefined.pipe(passwordSchema.optional()),
+        masterPassword: stringOrUndefined.pipe(passwordSchema.optional()),
+        expiresAt: z.coerce.number().optional(),
+      });
 
 export const createNoteFormSchema: z.ZodType<CreateVaultFormValues> = z.object({
   content: contentSchema.max(MAX_CONTENT_CLIENT, "Too long"),

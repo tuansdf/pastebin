@@ -35,16 +35,9 @@ export const AppShell = ({ children }: Props) => {
           />
           <NavLink
             to="/create-link"
-            label="Shorten a URL"
-            component={Link}
-            active={pathname === "/create-link"}
-            onClick={close}
-          />
-          <NavLink
-            to="/mask-link"
             label="Mask a URL"
             component={Link}
-            active={pathname === "/mask-link"}
+            active={pathname === "/create-link"}
             onClick={close}
           />
           <NavLink

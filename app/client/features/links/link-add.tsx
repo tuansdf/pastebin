@@ -5,6 +5,7 @@ import { ScreenLoading } from "@/client/components/screen-loading";
 import { useAppStore } from "@/client/stores/app.store";
 import {
   DEFAULT_LINK_ID_SIZE,
+  DEFAULT_NOTE_ID_SIZE,
   VAULT_EXPIRE_1_DAY,
   VAULT_EXPIRE_1_HOUR,
   VAULT_EXPIRE_1_MONTH,
@@ -16,11 +17,12 @@ import {
   encryptText,
   generateEncryptionConfigs,
   generateHashConfigs,
+  generateId,
   generatePassword,
   hashPassword,
 } from "@/shared/utils/crypto.util";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Card, CopyButton, Group, NativeSelect, PasswordInput, TextInput, Title } from "@mantine/core";
+import { Button, Card, CopyButton, Group, NativeSelect, PasswordInput, Switch, TextInput, Title } from "@mantine/core";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -32,6 +34,12 @@ const defaultFormValues: CreateVaultFormValues = {
 };
 
 export const LinkAdd = () => {
+  const [isShortUrl, setIsShortUrl] = useState(false);
+  const { addPassword, addShortUrl } = useAppStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const [shortLink, setShortLink] = useState("");
+  const [shortLinkWithPassword, setShortLinkWithPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const {
     handleSubmit,
     register,
@@ -40,13 +48,8 @@ export const LinkAdd = () => {
   } = useForm<CreateVaultFormValues>({
     defaultValues: defaultFormValues,
     reValidateMode: "onSubmit",
-    resolver: zodResolver(createLinkFormSchema),
+    resolver: zodResolver(createLinkFormSchema(isShortUrl)),
   });
-  const { addPassword, addShortUrl } = useAppStore();
-  const [isLoading, setIsLoading] = useState(false);
-  const [shortLink, setShortLink] = useState("");
-  const [shortLinkWithPassword, setShortLinkWithPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
 
   const handleFormSubmit: SubmitHandler<CreateVaultFormValues> = async (data) => {
     try {
@@ -60,17 +63,19 @@ export const LinkAdd = () => {
       ] as const;
       const [password, masterPassword] = await Promise.all(promises);
       const encrypted = await encryptText(data.content!, password, encryptionConfigs.nonce);
+      const guestPassword = isShortUrl ? undefined : generateId(DEFAULT_NOTE_ID_SIZE);
       const body = await createVault(
         {
           content: encrypted || "",
           configs: { hash: hashConfigs, encryption: encryptionConfigs },
-          masterPassword: masterPassword,
+          masterPassword,
+          guestPassword,
           expiresAt: getVaultExpiresTime(Number(data.expiresAt)),
         },
-        DEFAULT_LINK_ID_SIZE
+        isShortUrl ? DEFAULT_LINK_ID_SIZE : DEFAULT_NOTE_ID_SIZE
       );
       addPassword(password);
-      const shortLink = window.location.origin + `/s/${body.publicId}`;
+      const shortLink = window.location.origin + `/s/${body.publicId}` + (isShortUrl ? "" : `?${guestPassword}`);
       addShortUrl(shortLink);
       setShortLink(shortLink);
       setShortLinkWithPassword(shortLink + `#${password}`);
@@ -91,7 +96,8 @@ export const LinkAdd = () => {
   return (
     <>
       <Card component="form" onSubmit={handleSubmit(handleFormSubmit)} className="k-card-form">
-        <Title>Shorten a URL</Title>
+        <Title>{isShortUrl ? "Shorten" : "Mask"} a URL</Title>
+        <Switch checked={isShortUrl} onChange={(e) => setIsShortUrl(e.currentTarget.checked)} label="Short URL" />
         <TextInput
           autoComplete="off"
           autoFocus
@@ -103,14 +109,17 @@ export const LinkAdd = () => {
         />
         {!isSubmitted && (
           <>
-            <PasswordInput
-              type="password"
-              autoComplete="current-password"
-              label="Password"
-              {...register("password")}
-              error={errors.password?.message}
-              description="Random password will be generated when left empty"
-            />
+            {isShortUrl && (
+              <PasswordInput
+                type="password"
+                autoComplete="current-password"
+                label="Password"
+                withAsterisk
+                {...register("password")}
+                error={errors.password?.message}
+                description="To unlock this link"
+              />
+            )}
             <PasswordInput
               type="password"
               autoComplete="current-password"
@@ -124,7 +133,7 @@ export const LinkAdd = () => {
         )}
         {isSubmitted && (
           <>
-            <TextInput readOnly label="Short URL" value={shortLink} />
+            <TextInput readOnly label={isShortUrl ? "Short URL" : "Masked URL"} value={shortLink} />
             <Group>
               <Button component="a" href={shortLink} target="_blank" variant="default">
                 Open
@@ -153,7 +162,7 @@ export const LinkAdd = () => {
         )}
         {isSubmitted && (
           <Button type="reset" w="max-content" onClick={resetForm}>
-            Shorten another
+            Create another
           </Button>
         )}
       </Card>
