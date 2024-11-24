@@ -1,0 +1,41 @@
+{
+  "name": "pastebin-server",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "bun run --hot src/server.ts",
+    "build": "rimraf dist && bun build src/server.ts --outdir=dist --target=bun --sourcemap=linked && cpy resources dist && cpy .env dist",
+    "start": "bun run dist/server.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^22.9.3",
+    "@typescript-eslint/eslint-plugin": "^8.15.0",
+    "@typescript-eslint/parser": "^8.15.0",
+    "cpy-cli": "^5.0.0",
+    "drizzle-kit": "^0.28.1",
+    "eslint": "^9.15.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.3.3",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.14.0",
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.36.4",
+    "hono": "^4.6.11",
+    "nanoid": "^5.0.8",
+    "vite": "^5.4.11",
+    "zod": "^3.23.8"
+  }
+}
