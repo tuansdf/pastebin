@@ -7,7 +7,7 @@ import {
 } from "@/modules/vaults/vault.type.js";
 import { z } from "zod";
 
-const MAX_CONTENT_SERVER = 10000;
+const MAX_CONTENT_SERVER = 100000;
 
 const passwordConfigsSchema: z.ZodType<HashConfigs> = z.object(
   {
@@ -59,8 +59,8 @@ const encryptionConfigsSchema: z.ZodType<EncryptionConfigs> = z.object(
 
 const vaultConfigsSchema: z.ZodType<VaultConfigs> = z.object(
   {
-    hash: passwordConfigsSchema,
-    encryption: encryptionConfigsSchema,
+    hash: passwordConfigsSchema.optional(),
+    encryption: encryptionConfigsSchema.optional(),
   },
   { required_error: "Configs is required", invalid_type_error: "Invalid configs" },
 );
@@ -84,7 +84,7 @@ export const createVaultRequestSchema: z.ZodType<CreateVaultRequest> = z.object(
   content: contentSchema.max(MAX_CONTENT_SERVER, "Invalid content"),
   masterPassword: passwordSchema.optional(),
   guestPassword: z.string().optional(),
-  configs: vaultConfigsSchema,
+  configs: vaultConfigsSchema.optional(),
   expiresAt: z.coerce.number().optional(),
 });
 

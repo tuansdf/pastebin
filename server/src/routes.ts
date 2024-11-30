@@ -9,9 +9,9 @@ routes.get("/health", () => {
 });
 
 routes.post("/vaults", async (c) => {
-  const type = Number(c.req.query("type"));
+  const size = Number(c.req.query("size"));
   const body = createVaultRequestSchema.parse(await c.req.json());
-  const result = await vaultService.create(body, type);
+  const result = await vaultService.create(body, size);
   return Response.json(result);
 });
 

@@ -15,13 +15,13 @@ export type EncryptionConfigs = {
 };
 
 export type VaultConfigs = {
-  hash: HashConfigs;
-  encryption: EncryptionConfigs;
+  hash?: HashConfigs;
+  encryption?: EncryptionConfigs;
 };
 
 export type CreateVaultRequest = {
   content: string;
-  configs: VaultConfigs;
+  configs?: VaultConfigs;
   expiresAt?: number;
   masterPassword?: string;
   guestPassword?: string;

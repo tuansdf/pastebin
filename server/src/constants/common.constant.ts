@@ -1,7 +1,7 @@
 export const MIN_ID_SIZE = 8;
 export const MAX_ID_SIZE = 64;
 export const DEFAULT_LINK_ID_SIZE = 8;
-export const DEFAULT_NOTE_ID_SIZE = 16;
+export const DEFAULT_NOTE_ID_SIZE = 24;
 export const DEFAULT_PASSWORD_SIZE = 32;
 export const FAKE_PASSWORD_SIZE = DEFAULT_PASSWORD_SIZE * 2;
 

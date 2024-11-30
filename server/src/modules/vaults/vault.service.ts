@@ -17,10 +17,10 @@ const HASHED_SUPER_PASSWORD = ENV.SUPER_PASSWORD ? hasher.sha256(ENV.SUPER_PASSW
 const ID_REGEX = /^[a-zA-Z0-9]+$/;
 
 class VaultService {
-  public create = async (data: CreateVaultRequest, type: number) => {
+  public create = async (data: CreateVaultRequest, idSize: number) => {
     let expiresAt: number = getVaultExpiredAt(data.expiresAt);
 
-    const publicId = await handleVaultPublicIdCollision(() => generateId(getVaultIdSize(type)));
+    const publicId = await handleVaultPublicIdCollision(() => generateId(getVaultIdSize(idSize)));
     await vaultRepository.create({
       publicId,
       content: data.content,
@@ -29,7 +29,7 @@ class VaultService {
       configs: JSON.stringify(data.configs),
       expiresAt,
     });
-    return { publicId };
+    return { id: publicId };
   };
 
   public getTopByPublicId = async (

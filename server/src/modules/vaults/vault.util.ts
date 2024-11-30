@@ -2,12 +2,11 @@ import {
   DEFAULT_HASHER,
   DEFAULT_ITERATIONS,
   DEFAULT_KEY_SIZE,
+  DEFAULT_NOTE_ID_SIZE,
   FAKE_NONCE_SIZE,
   FAKE_SALT_SIZE,
   MAX_EXPIRES_TIME,
-  MAX_ID_SIZE,
   MIN_EXPIRES_TIME,
-  MIN_ID_SIZE,
 } from "@/constants/common.constant.js";
 import { ENV } from "@/constants/env.constant.js";
 import { base64 } from "@/lib/base64.js";
@@ -26,16 +25,20 @@ export const handleVaultPublicIdCollision = async (randomFn: () => string) => {
 
 export const getVaultExpiredAt = (expiresTime?: number): number => {
   let result = dayjs();
-  if (!expiresTime) return result.valueOf();
-  if (expiresTime < MIN_EXPIRES_TIME) expiresTime = MIN_EXPIRES_TIME;
-  if (expiresTime > MAX_EXPIRES_TIME) expiresTime = MAX_EXPIRES_TIME;
-  return result.add(expiresTime, "minute").valueOf();
+  // TODO: fix temporarily for frontend
+  // if (!expiresTime) return result.valueOf();
+  // if (expiresTime < MIN_EXPIRES_TIME) expiresTime = MIN_EXPIRES_TIME;
+  // if (expiresTime > MAX_EXPIRES_TIME) expiresTime = MAX_EXPIRES_TIME;
+  // return result.add(expiresTime, "minute").valueOf();
+  return result.add(MAX_EXPIRES_TIME, "minute").valueOf();
 };
 
 export const getVaultIdSize = (type?: number): number => {
-  if (!type || type > MAX_ID_SIZE) return MAX_ID_SIZE;
-  if (type < MIN_ID_SIZE) return MIN_ID_SIZE;
-  return type;
+  return DEFAULT_NOTE_ID_SIZE;
+  // TODO: fix temporarily for frontend
+  // if (!type || type > MAX_ID_SIZE) return MAX_ID_SIZE;
+  // if (type < MIN_ID_SIZE) return MIN_ID_SIZE;
+  // return type;
 };
 
 const createBase = (base: string) => {
