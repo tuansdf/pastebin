@@ -1,7 +1,7 @@
 import { Header } from "@/components/layout/header.tsx";
 import { CreateNoteForm } from "@/components/notes/create-note-form.tsx";
 
-export const CreateNotePage = () => {
+export function CreateNotePage() {
   return (
     <>
       <Header />
@@ -10,4 +10,4 @@ export const CreateNotePage = () => {
       </div>
     </>
   );
-};
+}

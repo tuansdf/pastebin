@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { ScreenLoading } from "@/components/ui/screen-loading.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { DEFAULT_ERROR_MESSAGE, MAX_CONTENT_LENGTH } from "@/contants/common.constant.ts";
+import { validateUrl } from "@/utils/common.util.ts";
 import { encryptText, generateEncryptionConfigs, generatePassword } from "@/utils/crypto.util.ts";
 import { useNavigate } from "@solidjs/router";
 import { createSignal, Show } from "solid-js";
@@ -14,7 +15,7 @@ export const CreateNoteForm = () => {
   const [errors, setErrors] = createSignal<{ content?: string; common?: string }>({});
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
 
-  const validateForm = (): boolean => {
+  const validateNoteForm = (): boolean => {
     if (!content()) {
       setErrors({ content: "Required" });
       return false;
@@ -28,7 +29,7 @@ export const CreateNoteForm = () => {
   };
 
   const handleNoteSubmit = async () => {
-    if (!validateForm()) return;
+    if (!validateNoteForm()) return;
     try {
       setErrors({});
       setIsLoading(true);
@@ -47,9 +48,33 @@ export const CreateNoteForm = () => {
     }
   };
 
-  // const handleURLSubmit = () => {
-  //   console.log("url", content());
-  // };
+  const validateUrlForm = (): boolean => {
+    if (!validateUrl(content().trim())) {
+      setErrors({ content: "URL is invalid" });
+      return false;
+    }
+    return true;
+  };
+
+  const handleUrlSubmit = async () => {
+    if (!validateUrlForm()) return;
+    try {
+      setErrors({});
+      setIsLoading(true);
+      const encryptionConfigs = generateEncryptionConfigs();
+      const password = generatePassword();
+      const encrypted = await encryptText(content(), password, encryptionConfigs.nonce);
+      const data = await createVault({
+        content: encrypted,
+        configs: { encryption: encryptionConfigs },
+      });
+      if (!data) return setErrors({ common: DEFAULT_ERROR_MESSAGE });
+      const id = data.id;
+      navigate(`/s/${id}#${password}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -74,9 +99,9 @@ export const CreateNoteForm = () => {
           placeholder="Write your notes here..."
         />
         <div class="d-flex justify-content-end mt-2 gap-2">
-          {/*<Button type="button" variant="dark" onClick={handleURLSubmit}>*/}
-          {/*  Create URL*/}
-          {/*</Button>*/}
+          <Button type="button" variant="dark" onClick={handleUrlSubmit}>
+            Create URL
+          </Button>
           <Button
             type="submit"
             onClick={async (e) => {

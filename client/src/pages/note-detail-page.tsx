@@ -1,7 +1,7 @@
 import { Header } from "@/components/layout/header.tsx";
 import { NoteDetail } from "@/components/notes/note-detail.tsx";
 
-export const NoteDetailPage = () => {
+export function NoteDetailPage() {
   return (
     <>
       <Header />
@@ -10,4 +10,4 @@ export const NoteDetailPage = () => {
       </div>
     </>
   );
-};
+}
