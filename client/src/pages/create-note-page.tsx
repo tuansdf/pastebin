@@ -5,7 +5,7 @@ export const CreateNotePage = () => {
   return (
     <>
       <Header />
-      <div class="container-xl p-3">
+      <div class="container-xxl p-3">
         <CreateNoteForm />
       </div>
     </>

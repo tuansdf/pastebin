@@ -1,7 +1,11 @@
 import { cn } from "@/utils/classnames.ts";
-import { ComponentProps, splitProps } from "solid-js";
+import { ComponentProps, mergeProps, splitProps } from "solid-js";
 
-export const Alert = (props: ComponentProps<"div">) => {
-  const [local, others] = splitProps(props, ["class"]);
-  return <div class={cn("alert alert-danger", local.class)} {...others}></div>;
+type Props = {
+  variant?: "info" | "danger";
+} & ComponentProps<"div">;
+
+export const Alert = (props: Props) => {
+  const [local, others] = splitProps(mergeProps({ variant: "info" }, props), ["class", "variant"]);
+  return <div class={cn(`alert alert-${local.variant} mb-3`, local.class)} {...others}></div>;
 };

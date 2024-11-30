@@ -12,14 +12,14 @@ export const Textarea = (props: Props) => {
 
   return (
     <div>
-      <textarea class={cn("form-control", local.class)} {...others} />
+      <textarea class={cn("form-control", !!local.errorMessage && "border-danger", local.class)} {...others} />
       <Show when={local.errorMessage || local.letterCount === 0 || local.letterCount}>
         <div class="d-flex justify-content-between">
           <Show when={local.errorMessage} fallback={<div></div>}>
-            <div class="form-text text-danger fs-6">{local.errorMessage}</div>
+            <div class="form-text text-danger fs-6 m-0">{local.errorMessage}</div>
           </Show>
           <Show when={local.letterCount === 0 || local.letterCount}>
-            <span class="text-secondary">
+            <span classList={{ "text-secondary fs-6": true, "text-danger": !!local.errorMessage }}>
               {local.letterCount}
               <Show when={local.maxLetterCount}>{`/${local.maxLetterCount}`}</Show>
             </span>
