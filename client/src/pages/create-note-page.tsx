@@ -83,14 +83,12 @@ export function CreateNotePage() {
 
         <Switch>
           <Match when={resultUrl()}>
-            <div class="">
-              <Alert>
-                Your note:{" "}
-                <A class="text-info" href={resultUrl()}>
-                  {resultUrl()}
-                </A>
-              </Alert>
-            </div>
+            <Alert>
+              Your note:{" "}
+              <A class="text-info text-break" href={resultUrl()}>
+                {resultUrl()}
+              </A>
+            </Alert>
           </Match>
           <Match when={true}>
             <form>
