@@ -2,7 +2,7 @@ import { getVaultAndDecryptContent } from "@/api/vault.api.ts";
 import { Alert } from "@/components/ui/alert.tsx";
 import { ScreenLoading } from "@/components/ui/screen-loading.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
-import { DEFAULT_ERROR_MESSAGE } from "@/contants/common.constant.ts";
+import { DEFAULT_ERROR_MESSAGE } from "@/constants/common.constant.ts";
 import { useParams } from "@solidjs/router";
 import { createResource, Match, Show, Switch } from "solid-js";
 

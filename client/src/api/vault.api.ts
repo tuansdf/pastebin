@@ -1,4 +1,4 @@
-import { BACKEND_BASE_URL } from "@/contants/env.constant.ts";
+import { BACKEND_BASE_URL } from "@/constants/env.constant.ts";
 import { CreateVaultResponse, GetOneVaultResponse } from "@/types/vault.type.ts";
 import { decryptText } from "@/utils/crypto.util.ts";
 

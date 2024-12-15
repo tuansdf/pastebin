@@ -4,7 +4,7 @@ import { Alert } from "@/components/ui/alert.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { ScreenLoading } from "@/components/ui/screen-loading.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
-import { DEFAULT_ERROR_MESSAGE, MAX_CONTENT_LENGTH } from "@/contants/common.constant.ts";
+import { DEFAULT_ERROR_MESSAGE, MAX_CONTENT_LENGTH } from "@/constants/common.constant.ts";
 import { validateUrl } from "@/utils/common.util.ts";
 import { encryptText, generateEncryptionConfigs, generatePassword } from "@/utils/crypto.util.ts";
 import { A } from "@solidjs/router";

@@ -1,4 +1,4 @@
-import { DEFAULT_NONCE_SIZE, DEFAULT_PASSWORD_SIZE } from "@/contants/common.constant";
+import { DEFAULT_NONCE_SIZE, DEFAULT_PASSWORD_SIZE } from "@/constants/common.constant";
 import { xchacha20poly1305 } from "@noble/ciphers/chacha";
 import { bytesToHex, hexToBytes } from "@noble/ciphers/utils";
 import { randomBytes } from "@noble/ciphers/webcrypto";
