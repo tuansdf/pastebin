@@ -3,22 +3,15 @@ import { hasher } from "@/lib/hasher.js";
 import { generateId } from "@/lib/id.js";
 import { vaultRepository } from "@/modules/vaults/vault.repository.js";
 import { CreateVaultRequest, DeleteVaultRequest, VaultConfigs } from "@/modules/vaults/vault.type.js";
-import {
-  generateFakeContent,
-  generateFakeEncryptionConfigs,
-  generateFakeHashConfigs,
-  getVaultExpiredAt,
-  getVaultIdSize,
-  handleVaultPublicIdCollision,
-} from "@/modules/vaults/vault.util.js";
+import { getVaultExpiredAt, getVaultIdSize, handleVaultPublicIdCollision } from "@/modules/vaults/vault.util.js";
 import dayjs from "dayjs";
 
 const HASHED_SUPER_PASSWORD = ENV.SUPER_PASSWORD ? hasher.sha256(ENV.SUPER_PASSWORD) : undefined;
-const ID_REGEX = /^[a-zA-Z0-9]+$/;
+const ID_REGEX = /^[a-zA-Z0-9]{8,64}$/;
 
 class VaultService {
   public create = async (data: CreateVaultRequest, idSize: number) => {
-    let expiresAt: number = getVaultExpiredAt(data.expiresAt);
+    const expiresAt: number = getVaultExpiredAt(data.expiresAt);
 
     const publicId = await handleVaultPublicIdCollision(() => generateId(getVaultIdSize(idSize)));
     await vaultRepository.create({
@@ -45,14 +38,9 @@ class VaultService {
       (vault.guestPassword && vault.guestPassword !== guestPassword) ||
       (vault.expiresAt && vault.expiresAt < now)
     ) {
-      const base = id + (guestPassword || "");
-      return {
-        publicId: id,
-        content: generateFakeContent(base),
-        configs: { hash: generateFakeHashConfigs(base), encryption: generateFakeEncryptionConfigs(base) },
-      };
+      return null;
     }
-    let configs = this.parseVaultConfigs(vault.configs!);
+    const configs = this.parseVaultConfigs(vault.configs!);
 
     return {
       publicId: id,
@@ -71,17 +59,16 @@ class VaultService {
     if (!configs) return;
     try {
       return JSON.parse(configs) as VaultConfigs;
-    } catch {}
+    } catch {
+      return undefined;
+    }
   };
 
-  public getVaultConfigs = async (id: string): Promise<VaultConfigs> => {
+  public getVaultConfigs = async (id: string): Promise<VaultConfigs | null> => {
     const vault = await vaultRepository.findTopByPublicId(id);
     const configs = this.parseVaultConfigs(vault?.configs);
     if (!configs) {
-      return {
-        hash: generateFakeHashConfigs(id),
-        encryption: generateFakeEncryptionConfigs(id),
-      };
+      return null;
     }
     return configs;
   };
