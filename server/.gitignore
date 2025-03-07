@@ -139,3 +139,5 @@ temp
 temp.*
 *.temp.*
 drizzle
+
+resources/*.db
