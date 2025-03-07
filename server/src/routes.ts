@@ -21,12 +21,6 @@ routes.get("/vaults/:id", async (c) => {
   return Response.json(result);
 });
 
-routes.post("/vaults/:id/configs", async (c) => {
-  const id = c.req.param("id") || "";
-  const result = await vaultService.getVaultConfigs(id);
-  return Response.json(result);
-});
-
 routes.get("/vaults/:id/delete", async (c) => {
   const id = c.req.param("id") || "";
   const body = await c.req.json();

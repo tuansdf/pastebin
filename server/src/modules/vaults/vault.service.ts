@@ -2,7 +2,7 @@ import { ENV } from "@/constants/env.constant.js";
 import { hasher } from "@/lib/hasher.js";
 import { generateId } from "@/lib/id.js";
 import { vaultRepository } from "@/modules/vaults/vault.repository.js";
-import { CreateVaultRequest, DeleteVaultRequest, VaultConfigs } from "@/modules/vaults/vault.type.js";
+import { CreateVaultRequest, DeleteVaultRequest } from "@/modules/vaults/vault.type.js";
 import { getVaultExpiredAt, getVaultIdSize, handleVaultPublicIdCollision } from "@/modules/vaults/vault.util.js";
 import dayjs from "dayjs";
 
@@ -18,34 +18,23 @@ class VaultService {
       publicId,
       content: data.content,
       masterPassword: data.masterPassword,
-      guestPassword: data.guestPassword,
-      configs: JSON.stringify(data.configs),
       expiresAt,
     });
     return { id: publicId };
   };
 
-  public getTopByPublicId = async (
-    id: string,
-    guestPassword?: string | null,
-  ): Promise<{ publicId: string; content: string | null; configs?: VaultConfigs } | null> => {
+  public getTopByPublicId = async (id: string): Promise<{ publicId: string; content: string | null } | null> => {
     if (!ID_REGEX.test(id)) return null;
     const now = dayjs().valueOf();
 
     const vault = await vaultRepository.findTopByPublicId(id);
-    if (
-      !vault ||
-      (vault.guestPassword && vault.guestPassword !== guestPassword) ||
-      (vault.expiresAt && vault.expiresAt < now)
-    ) {
+    if (!vault || (vault.expiresAt && vault.expiresAt < now)) {
       return null;
     }
-    const configs = this.parseVaultConfigs(vault.configs!);
 
     return {
       publicId: id,
       content: vault.content,
-      configs,
     };
   };
 
@@ -53,24 +42,6 @@ class VaultService {
     const date = dayjs().valueOf();
     await vaultRepository.deleteAllExpiresAtBefore(date);
     return date;
-  };
-
-  private parseVaultConfigs = (configs?: string | null): VaultConfigs | undefined => {
-    if (!configs) return;
-    try {
-      return JSON.parse(configs) as VaultConfigs;
-    } catch {
-      return undefined;
-    }
-  };
-
-  public getVaultConfigs = async (id: string): Promise<VaultConfigs | null> => {
-    const vault = await vaultRepository.findTopByPublicId(id);
-    const configs = this.parseVaultConfigs(vault?.configs);
-    if (!configs) {
-      return null;
-    }
-    return configs;
   };
 
   public deleteTopByPublicId = async (id: string, data: DeleteVaultRequest) => {
