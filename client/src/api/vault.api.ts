@@ -2,8 +2,11 @@ import { BACKEND_BASE_URL } from "@/constants/env.constant.ts";
 import { CreateVaultResponse, GetOneVaultResponse } from "@/types/vault.type.ts";
 import { decryptText } from "@/utils/crypto.util.ts";
 
-export const createVault = async (data: any): Promise<CreateVaultResponse | null> => {
-  const res = await fetch(`${BACKEND_BASE_URL}/api/vaults`, {
+export const createVault = async (
+  data: any,
+  options: { size?: number; time?: number },
+): Promise<CreateVaultResponse | null> => {
+  const res = await fetch(`${BACKEND_BASE_URL}/api/vaults?size=${options.size || ""}&time=${options.time || ""}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

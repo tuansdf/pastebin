@@ -4,7 +4,16 @@ import { Alert } from "@/components/ui/alert.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { ScreenLoading } from "@/components/ui/screen-loading.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
-import { DEFAULT_ERROR_MESSAGE, MAX_CONTENT_LENGTH } from "@/constants/common.constant.ts";
+import {
+  DEFAULT_ERROR_MESSAGE,
+  DEFAULT_LINK_ID_SIZE,
+  DEFAULT_NOTE_ID_SIZE,
+  EXPIRES_TIME_1_DAY,
+  EXPIRES_TIME_1_HOUR,
+  EXPIRES_TIME_1_MONTH,
+  EXPIRES_TIME_1_WEEK,
+  MAX_CONTENT_LENGTH,
+} from "@/constants/common.constant.ts";
 import { validateUrl } from "@/utils/common.util.ts";
 import { encryptText, generatePassword } from "@/utils/crypto.util.ts";
 import { A } from "@solidjs/router";
@@ -12,6 +21,7 @@ import { createSignal, Match, Show, Switch } from "solid-js";
 
 export function CreateNotePage() {
   const [content, setContent] = createSignal<string>("");
+  const [expiresTime, setExpiresTime] = createSignal<number>(EXPIRES_TIME_1_HOUR);
   const [errors, setErrors] = createSignal<{ content?: string; common?: string }>({});
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [resultUrl, setResultUrl] = createSignal<string>("");
@@ -36,9 +46,12 @@ export function CreateNotePage() {
       setIsLoading(true);
       const password = generatePassword();
       const encrypted = await encryptText(content(), password);
-      const data = await createVault({
-        content: encrypted,
-      });
+      const data = await createVault(
+        {
+          content: encrypted,
+        },
+        { size: DEFAULT_NOTE_ID_SIZE, time: expiresTime() },
+      );
       if (!data) return setErrors({ common: DEFAULT_ERROR_MESSAGE });
       const id = data.id;
       setResultUrl(`${location.origin}/${id}#${password}`);
@@ -57,9 +70,12 @@ export function CreateNotePage() {
       setIsLoading(true);
       const password = generatePassword();
       const encrypted = await encryptText(content(), password);
-      const data = await createVault({
-        content: encrypted,
-      });
+      const data = await createVault(
+        {
+          content: encrypted,
+        },
+        { size: DEFAULT_LINK_ID_SIZE, time: expiresTime() },
+      );
       if (!data) return setErrors({ common: DEFAULT_ERROR_MESSAGE });
       const id = data.id;
       setResultUrl(`${location.origin}/s/${id}#${password}`);
@@ -103,19 +119,31 @@ export function CreateNotePage() {
                 maxLetterCount={MAX_CONTENT_LENGTH}
                 placeholder="Write your notes here..."
               />
-              <div class="d-flex justify-content-end mt-2 gap-2">
-                <Button type="button" variant="dark" onClick={handleUrlSubmit}>
-                  Create URL
-                </Button>
-                <Button
-                  type="submit"
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    await handleNoteSubmit();
-                  }}
+              <div class="d-flex justify-content-between mt-2 gap-2">
+                <select
+                  class="form-select w-auto"
+                  aria-label="Default select example"
+                  onInput={(e) => setExpiresTime(Number(e.target.value))}
                 >
-                  Create note
-                </Button>
+                  <option value={EXPIRES_TIME_1_HOUR}>Expires: 1 hour</option>
+                  <option value={EXPIRES_TIME_1_DAY}>Expires: 1 day</option>
+                  <option value={EXPIRES_TIME_1_WEEK}>Expires: 1 week</option>
+                  <option value={EXPIRES_TIME_1_MONTH}>Expires: 1 month</option>
+                </select>
+                <div class="d-flex justify-content-end gap-2">
+                  <Button type="button" variant="dark" onClick={handleUrlSubmit}>
+                    Create URL
+                  </Button>
+                  <Button
+                    type="submit"
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      await handleNoteSubmit();
+                    }}
+                  >
+                    Create note
+                  </Button>
+                </div>
               </div>
             </form>
           </Match>
