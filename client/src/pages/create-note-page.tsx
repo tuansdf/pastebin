@@ -6,7 +6,7 @@ import { ScreenLoading } from "@/components/ui/screen-loading.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { DEFAULT_ERROR_MESSAGE, MAX_CONTENT_LENGTH } from "@/constants/common.constant.ts";
 import { validateUrl } from "@/utils/common.util.ts";
-import { encryptText, generateEncryptionConfigs, generatePassword } from "@/utils/crypto.util.ts";
+import { encryptText, generatePassword } from "@/utils/crypto.util.ts";
 import { A } from "@solidjs/router";
 import { createSignal, Match, Show, Switch } from "solid-js";
 
@@ -34,12 +34,10 @@ export function CreateNotePage() {
 
     try {
       setIsLoading(true);
-      const encryptionConfigs = generateEncryptionConfigs();
       const password = generatePassword();
-      const encrypted = await encryptText(content(), password, encryptionConfigs.nonce);
+      const encrypted = await encryptText(content(), password);
       const data = await createVault({
         content: encrypted,
-        configs: { encryption: encryptionConfigs },
       });
       if (!data) return setErrors({ common: DEFAULT_ERROR_MESSAGE });
       const id = data.id;
@@ -57,12 +55,10 @@ export function CreateNotePage() {
 
     try {
       setIsLoading(true);
-      const encryptionConfigs = generateEncryptionConfigs();
       const password = generatePassword();
-      const encrypted = await encryptText(content(), password, encryptionConfigs.nonce);
+      const encrypted = await encryptText(content(), password);
       const data = await createVault({
         content: encrypted,
-        configs: { encryption: encryptionConfigs },
       });
       if (!data) return setErrors({ common: DEFAULT_ERROR_MESSAGE });
       const id = data.id;

@@ -28,11 +28,10 @@ export const getVaultAndDecryptContent = async (id?: string): Promise<string | u
   const data = await getVault(id || "");
   if (!data) return;
 
-  const nonce = data.configs?.encryption?.nonce;
   const password = location.hash.startsWith("#") ? location.hash.substring(1) : location.hash;
-  if (!data.content || !nonce || !password) return;
+  if (!data.content || !password) return;
 
-  const decrypted = await decryptText(data.content, password, nonce);
+  const decrypted = await decryptText(data.content, password);
   if (!decrypted) return;
 
   return decrypted;
