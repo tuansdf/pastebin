@@ -1,23 +1,20 @@
+import { ID_REGEX, MAX_EXPIRES_TIME, MAX_ID_SIZE, MIN_EXPIRES_TIME, MIN_ID_SIZE } from "@/constants/common.constant.js";
 import { ENV } from "@/constants/env.constant.js";
-import { hasher } from "@/lib/hasher.js";
-import { generateId } from "@/lib/id.js";
 import { vaultRepository } from "@/modules/vaults/vault.repository.js";
 import { CreateVaultRequest, DeleteVaultRequest } from "@/modules/vaults/vault.type.js";
-import { getVaultExpiredAt, getVaultIdSize, handleVaultPublicIdCollision } from "@/modules/vaults/vault.util.js";
+import { boundNumber, generateId } from "@/utils/common.util.js";
 import dayjs from "dayjs";
 
-const HASHED_SUPER_PASSWORD = ENV.SUPER_PASSWORD ? hasher.sha256(ENV.SUPER_PASSWORD) : undefined;
-const ID_REGEX = /^[a-zA-Z0-9]{8,64}$/;
-
 class VaultService {
-  public create = async (data: CreateVaultRequest, idSize: number) => {
-    const expiresAt: number = getVaultExpiredAt(data.expiresAt);
+  public create = async (data: CreateVaultRequest, options: { idSize?: number; expiresTime?: number }) => {
+    const expiresAt: number = dayjs()
+      .add(boundNumber(options.expiresTime || 0, MIN_EXPIRES_TIME, MAX_EXPIRES_TIME), "minute")
+      .valueOf();
+    const publicId = generateId(boundNumber(options.idSize || 0, MIN_ID_SIZE, MAX_ID_SIZE));
 
-    const publicId = await handleVaultPublicIdCollision(() => generateId(getVaultIdSize(idSize)));
     await vaultRepository.create({
       publicId,
       content: data.content,
-      masterPassword: data.masterPassword,
       expiresAt,
     });
     return { id: publicId };
@@ -45,7 +42,7 @@ class VaultService {
   };
 
   public deleteTopByPublicId = async (id: string, data: DeleteVaultRequest) => {
-    if (HASHED_SUPER_PASSWORD && data.raw && HASHED_SUPER_PASSWORD === hasher.sha256(data.raw)) {
+    if (ENV.SUPER_PASSWORD && data.raw && ENV.SUPER_PASSWORD === data.raw) {
       await vaultRepository.deleteByPublicId(id);
       return;
     }
