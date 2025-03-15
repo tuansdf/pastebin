@@ -9,21 +9,16 @@ routes.get("/health", () => {
 });
 
 routes.post("/vaults", async (c) => {
-  const size = Number(c.req.query("size"));
+  const idSize = Number(c.req.query("size") || "");
+  const expiresTime = Number(c.req.query("time") || "");
   const body = createVaultRequestSchema.parse(await c.req.json());
-  const result = await vaultService.create(body, size);
+  const result = await vaultService.create(body, { idSize, expiresTime });
   return Response.json(result);
 });
 
 routes.get("/vaults/:id", async (c) => {
   const id = c.req.param("id") || "";
   const result = await vaultService.getTopByPublicId(id);
-  return Response.json(result);
-});
-
-routes.post("/vaults/:id/configs", async (c) => {
-  const id = c.req.param("id") || "";
-  const result = await vaultService.getVaultConfigs(id);
   return Response.json(result);
 });
 

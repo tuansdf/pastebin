@@ -24,7 +24,7 @@ export const NoteDetail = () => {
           <Alert variant="danger">{errorMessage()}</Alert>
         </Match>
         <Match when={true}>
-          <Textarea readOnly={true} value={content()} rows={20} />
+          <Textarea class="font-monospace" readOnly={true} value={content()} rows={20} />
         </Match>
       </Switch>
 

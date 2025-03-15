@@ -2,8 +2,11 @@ import { BACKEND_BASE_URL } from "@/constants/env.constant.ts";
 import { CreateVaultResponse, GetOneVaultResponse } from "@/types/vault.type.ts";
 import { decryptText } from "@/utils/crypto.util.ts";
 
-export const createVault = async (data: any): Promise<CreateVaultResponse | null> => {
-  const res = await fetch(`${BACKEND_BASE_URL}/api/vaults`, {
+export const createVault = async (
+  data: any,
+  options: { size?: number; time?: number },
+): Promise<CreateVaultResponse | null> => {
+  const res = await fetch(`${BACKEND_BASE_URL}/api/vaults?size=${options.size || ""}&time=${options.time || ""}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -28,11 +31,10 @@ export const getVaultAndDecryptContent = async (id?: string): Promise<string | u
   const data = await getVault(id || "");
   if (!data) return;
 
-  const nonce = data.configs?.encryption?.nonce;
   const password = location.hash.startsWith("#") ? location.hash.substring(1) : location.hash;
-  if (!data.content || !nonce || !password) return;
+  if (!data.content || !password) return;
 
-  const decrypted = await decryptText(data.content, password, nonce);
+  const decrypted = await decryptText(data.content, password);
   if (!decrypted) return;
 
   return decrypted;
