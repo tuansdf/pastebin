@@ -1,0 +1,7 @@
+.idea
+.vscode
+resources/*
+!resources/.gitkeep
+.env
+.env.*
+!.env.example
