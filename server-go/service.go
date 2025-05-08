@@ -11,7 +11,7 @@ type Service struct {
 }
 
 func (s *Service) Create(content string, idSize int, expireMinutes int, password string) (string, error) {
-	if SuperPassword != "" && password != SuperPassword {
+	if AdminCreatePassword != "" && password != AdminCreatePassword {
 		return "", errors.New("something went wrong")
 	}
 
@@ -49,12 +49,15 @@ func (s *Service) FindTopByPublicId(id string) (*Vault, error) {
 	return vault, nil
 }
 
-func (s *Service) DeleteExpiredVaults() {
+func (s *Service) DeleteExpiredVaults(password string) {
+	if AdminDeletePassword == "" || password != AdminDeletePassword {
+		return
+	}
 	s.Repository.DeleteAllExpiresAtBefore(time.Now().UnixMilli())
 }
 
 func (s *Service) DeleteTopByPublicId(id string, password string) {
-	if SuperPassword == "" || password != SuperPassword {
+	if AdminDeletePassword == "" || password != AdminDeletePassword {
 		return
 	}
 	s.Repository.DeleteByPublicId(id)

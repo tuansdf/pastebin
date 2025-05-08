@@ -68,7 +68,8 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 	})
 	mux.HandleFunc("DELETE /expired", func(w http.ResponseWriter, r *http.Request) {
-		service.DeleteExpiredVaults()
+		_, password, _ := r.BasicAuth()
+		service.DeleteExpiredVaults(password)
 		w.WriteHeader(http.StatusOK)
 	})
 
