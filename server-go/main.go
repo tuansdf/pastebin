@@ -21,6 +21,21 @@ type CreateResponse struct {
 	Id string `json:"id"`
 }
 
+func withCORS(handler http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		handler(w, r)
+	}
+}
+
 func main() {
 	db, err := sql.Open("sqlite3", DbUrl)
 	if err != nil {
@@ -33,7 +48,10 @@ func main() {
 	service := Service{Repository: repository}
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("POST /", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("OPTIONS /", withCORS(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+	mux.HandleFunc("POST /", withCORS(func(w http.ResponseWriter, r *http.Request) {
 		_, password, _ := r.BasicAuth()
 		var request = CreateRequest{}
 		err := json.NewDecoder(r.Body).Decode(&request)
@@ -49,8 +67,8 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(CreateResponse{Id: result})
-	})
-	mux.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
+	}))
+	mux.HandleFunc("GET /{id}", withCORS(func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
 		result, err := service.FindTopByPublicId(id)
 		if err != nil || result == nil {
@@ -60,7 +78,7 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(result)
-	})
+	}))
 	mux.HandleFunc("DELETE /{id}", func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
 		_, password, _ := r.BasicAuth()
