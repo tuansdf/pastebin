@@ -1,4 +1,4 @@
-module server-go
+module pastebin-server
 
 go 1.24
 
