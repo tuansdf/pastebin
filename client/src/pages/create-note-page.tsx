@@ -13,7 +13,7 @@ import {
   EXPIRES_TIME_1_HOUR,
   EXPIRES_TIME_1_MONTH,
   EXPIRES_TIME_1_WEEK,
-  MAX_CONTENT_LENGTH
+  MAX_CONTENT_LENGTH,
 } from "@/constants/common.constant.ts";
 import { validateUrl } from "@/utils/common.util.ts";
 import { encryptText, generatePassword } from "@/utils/crypto.util.ts";
@@ -49,9 +49,9 @@ export function CreateNotePage() {
       const encrypted = await encryptText(content(), password);
       const data = await createVault(
         {
-          content: encrypted
+          content: encrypted,
         },
-        { size: DEFAULT_NOTE_ID_SIZE, time: expiresTime() }
+        { size: DEFAULT_NOTE_ID_SIZE, time: expiresTime() },
       );
       if (!data) return setErrors({ common: DEFAULT_ERROR_MESSAGE });
       const id = data.id;
@@ -73,9 +73,9 @@ export function CreateNotePage() {
       const encrypted = await encryptText(content(), password);
       const data = await createVault(
         {
-          content: encrypted
+          content: encrypted,
         },
-        { size: DEFAULT_LINK_ID_SIZE, time: expiresTime() }
+        { size: DEFAULT_LINK_ID_SIZE, time: expiresTime() },
       );
       if (!data) return setErrors({ common: DEFAULT_ERROR_MESSAGE });
       const id = data.id;

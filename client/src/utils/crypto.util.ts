@@ -1,20 +1,21 @@
 import { DEFAULT_PASSWORD_SIZE } from "@/constants/common.constant";
 import { xchacha20poly1305 } from "@noble/ciphers/chacha";
-import { bytesToHex, hexToBytes } from "@noble/ciphers/utils";
 import { managedNonce, randomBytes } from "@noble/ciphers/webcrypto";
-import { base64 } from "@scure/base";
+import { base64urlnopad } from "@scure/base";
 import Pako from "pako";
 
 const encryptFn = managedNonce(xchacha20poly1305);
+const base64Encode = base64urlnopad.encode;
+const base64Decode = base64urlnopad.decode;
 
-export const encryptText = async (contentStr: string, passwordHex: string): Promise<string> => {
+export const encryptText = async (contentStr: string, password64: string): Promise<string> => {
   const start = performance.now();
   try {
-    const password = hexToBytes(passwordHex);
+    const password = base64Decode(password64);
     const cipher = encryptFn(password);
     let content = Pako.deflate(contentStr);
     let encrypted = cipher.encrypt(content);
-    return base64.encode(encrypted);
+    return base64Encode(encrypted);
   } catch (e) {
     return "";
   } finally {
@@ -22,11 +23,11 @@ export const encryptText = async (contentStr: string, passwordHex: string): Prom
   }
 };
 
-export const decryptText = async (content64: string, passwordHex: string): Promise<string> => {
+export const decryptText = async (content64: string, password64: string): Promise<string> => {
   const start = performance.now();
   try {
-    const content = base64.decode(content64);
-    const password = hexToBytes(passwordHex);
+    const content = base64Decode(content64);
+    const password = base64Decode(password64);
     const cipher = encryptFn(password);
     return Pako.inflate(cipher.decrypt(content), { to: "string" });
   } catch (e) {
@@ -37,5 +38,5 @@ export const decryptText = async (content64: string, passwordHex: string): Promi
 };
 
 export const generatePassword = (size: number = DEFAULT_PASSWORD_SIZE) => {
-  return bytesToHex(randomBytes(size));
+  return base64Encode(randomBytes(size));
 };

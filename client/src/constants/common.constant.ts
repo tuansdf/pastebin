@@ -1,5 +1,5 @@
 export const DEFAULT_LINK_ID_SIZE = 8;
-export const DEFAULT_NOTE_ID_SIZE = 16;
+export const DEFAULT_NOTE_ID_SIZE = 8;
 export const DEFAULT_PASSWORD_SIZE = 32;
 
 export const DEFAULT_EXPIRES_TIME = 60 * 24 * 30;
