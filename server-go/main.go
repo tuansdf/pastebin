@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
 	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -21,41 +23,34 @@ type CreateResponse struct {
 	Id string `json:"id"`
 }
 
-func withCORS(handler http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-
-		if r.Method == http.MethodOptions {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-
-		handler(w, r)
-	}
-}
-
 func main() {
 	db, err := sql.Open("sqlite3", DbUrl)
 	if err != nil {
 		log.Fatalf("failed to open db: %v", err)
-		return
 	}
 	defer db.Close()
 
 	repository := Repository{DB: db}
 	service := Service{Repository: repository}
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("OPTIONS /", withCORS(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
+	r := chi.NewRouter()
+
+	// Add CORS middleware
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		AllowCredentials: false,
+		MaxAge:           300,
 	}))
-	mux.HandleFunc("POST /", withCORS(func(w http.ResponseWriter, r *http.Request) {
+
+	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+	r.Post("/", func(w http.ResponseWriter, r *http.Request) {
 		_, password, _ := r.BasicAuth()
-		var request = CreateRequest{}
-		err := json.NewDecoder(r.Body).Decode(&request)
-		if err != nil {
+		var request CreateRequest
+		if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -65,27 +60,28 @@ func main() {
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(CreateResponse{Id: result})
-	}))
-	mux.HandleFunc("GET /{id}", withCORS(func(w http.ResponseWriter, r *http.Request) {
-		id := r.PathValue("id")
+	})
+
+	r.Get("/{id}", func(w http.ResponseWriter, r *http.Request) {
+		id := chi.URLParam(r, "id")
 		result, err := service.FindTopByPublicId(id)
 		if err != nil || result == nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(result)
-	}))
-	mux.HandleFunc("DELETE /{id}", func(w http.ResponseWriter, r *http.Request) {
-		id := r.PathValue("id")
+	})
+
+	r.Delete("/{id}", func(w http.ResponseWriter, r *http.Request) {
+		id := chi.URLParam(r, "id")
 		_, password, _ := r.BasicAuth()
 		service.DeleteTopByPublicId(id, password)
 		w.WriteHeader(http.StatusOK)
 	})
-	mux.HandleFunc("DELETE /expired", func(w http.ResponseWriter, r *http.Request) {
+
+	r.Delete("/expired", func(w http.ResponseWriter, r *http.Request) {
 		_, password, _ := r.BasicAuth()
 		service.DeleteExpiredVaults(password)
 		w.WriteHeader(http.StatusOK)
@@ -93,5 +89,5 @@ func main() {
 
 	port := ":" + Port
 	fmt.Printf("Starting server at %s...\n", port)
-	log.Fatal(http.ListenAndServe(port, mux))
+	log.Fatal(http.ListenAndServe(port, r))
 }
