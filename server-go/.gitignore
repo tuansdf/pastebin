@@ -2,6 +2,8 @@
 .vscode
 resources/*
 !resources/.gitkeep
+dist/*
+!dist/.gitkeep
 .env
 .env.*
 !.env.example

@@ -1,0 +1,19 @@
+version: '3'
+
+env:
+  OUT_DIR: dist
+  BIN_NAME: pastebin
+
+tasks:
+  build:
+    cmds:
+      - go build -o {{.OUT_DIR}}/{{.BIN_NAME}} .
+
+  run:
+    deps: [ build ]
+    cmds:
+      - ./{{.OUT_DIR}}/{{.BIN_NAME}}
+
+  dev:
+    cmds:
+      - go run .
