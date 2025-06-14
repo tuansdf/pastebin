@@ -9,8 +9,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/joho/godotenv/autoload"
-	_ "github.com/mattn/go-sqlite3"
 )
 
 type CreateRequest struct {
@@ -24,7 +24,7 @@ type CreateResponse struct {
 }
 
 func main() {
-	db, err := sql.Open("sqlite3", DbUrl)
+	db, err := sql.Open("pgx", EnvDbUrl)
 	if err != nil {
 		log.Fatalf("failed to open db: %v", err)
 	}
@@ -47,6 +47,7 @@ func main() {
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
+
 	r.Post("/", func(w http.ResponseWriter, r *http.Request) {
 		_, password, _ := r.BasicAuth()
 		var request CreateRequest
@@ -87,7 +88,7 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	port := ":" + Port
+	port := ":" + EnvPort
 	fmt.Printf("Starting server at %s...\n", port)
 	log.Fatal(http.ListenAndServe(port, r))
 }

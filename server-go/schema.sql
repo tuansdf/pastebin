@@ -1,7 +1,7 @@
 CREATE TABLE vault
 (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    public_id  TEXT(64),
-    content    TEXT(100000),
-    expires_at INTEGER
-)
+    id         BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    public_id  TEXT,
+    content    TEXT,
+    expires_at BIGINT
+);

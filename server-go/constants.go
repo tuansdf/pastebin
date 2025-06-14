@@ -1,14 +1,14 @@
 package main
 
 var (
-	IdAlphabet          = "123456789abcdefghjkmnpqrstuvwxyz"
-	MinIdSize           = getEnvAsInt("MIN_ID_SIZE", 8)
-	MaxIdSize           = getEnvAsInt("MAX_ID_SIZE", 64)
-	MinExpireMinutes    = getEnvAsInt("MIN_EXPIRE_MINUTES", 1)
-	MaxExpireMinutes    = getEnvAsInt("MAX_EXPIRE_MINUTES", 525600)
-	AdminCreatePassword = getEnv("ADMIN_CREATE_PASSWORD", "")
-	AdminDeletePassword = getEnv("ADMIN_DELETE_PASSWORD", "")
-	MaxContentLength    = getEnvAsInt("MAX_CONTENT_LENGTH", 100000)
-	DbUrl               = getEnv("DB_URL", "")
-	Port                = getEnv("PORT", "5000")
+	EnvIdAlphabet          = "123456789abcdefghjkmnpqrstuvwxyz"
+	EnvMinIdSize           = getEnvAsInt("MIN_ID_SIZE", 8)
+	EnvMaxIdSize           = getEnvAsInt("MAX_ID_SIZE", 64)
+	EnvMinExpireMinutes    = getEnvAsInt("MIN_EXPIRE_MINUTES", 1)
+	EnvMaxExpireMinutes    = getEnvAsInt("MAX_EXPIRE_MINUTES", 525600)
+	EnvAdminCreatePassword = getEnv("ADMIN_CREATE_PASSWORD", "")
+	EnvAdminDeletePassword = getEnv("ADMIN_DELETE_PASSWORD", "")
+	EnvMaxContentLength    = getEnvAsInt("MAX_CONTENT_LENGTH", 100000)
+	EnvDbUrl               = getEnv("DB_URL", "")
+	EnvPort                = getEnv("PORT", "5000")
 )

@@ -32,7 +32,7 @@ func boundNumber(current int, min int, max int) int {
 }
 
 func generateId(length int) string {
-	result, err := gonanoid.Generate(IdAlphabet, length)
+	result, err := gonanoid.Generate(EnvIdAlphabet, length)
 	if err != nil {
 		return ""
 	}

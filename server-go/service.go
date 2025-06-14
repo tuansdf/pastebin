@@ -11,21 +11,21 @@ type Service struct {
 }
 
 func (s *Service) Create(content string, idSize int, expireMinutes int, password string) (string, error) {
-	if AdminCreatePassword != "" && password != AdminCreatePassword {
+	if EnvAdminCreatePassword != "" && password != EnvAdminCreatePassword {
 		return "", errors.New("something went wrong")
 	}
 
 	if content == "" {
 		return "", errors.New("content is empty")
 	}
-	if len(content) > MaxContentLength {
-		return "", errors.New("content must be less than " + strconv.Itoa(MaxContentLength) + " characters")
+	if len(content) > EnvMaxContentLength {
+		return "", errors.New("content must be less than " + strconv.Itoa(EnvMaxContentLength) + " characters")
 	}
 
-	idSize = boundNumber(idSize, MinIdSize, MaxIdSize)
+	idSize = boundNumber(idSize, EnvMinIdSize, EnvMaxIdSize)
 	publicId := generateId(idSize)
-	expireMinutes = boundNumber(expireMinutes, MinExpireMinutes, MaxExpireMinutes)
-	expiresAt := time.Now().Add(time.Duration(expireMinutes) * time.Minute).UnixMilli()
+	expireMinutes = boundNumber(expireMinutes, EnvMinExpireMinutes, EnvMaxExpireMinutes)
+	expiresAt := time.Now().Add(time.Duration(expireMinutes) * time.Minute).Unix()
 
 	v := Vault{
 		PublicId:  publicId,
@@ -50,14 +50,14 @@ func (s *Service) FindTopByPublicId(id string) (*Vault, error) {
 }
 
 func (s *Service) DeleteExpiredVaults(password string) {
-	if AdminDeletePassword == "" || password != AdminDeletePassword {
+	if EnvAdminDeletePassword == "" || password != EnvAdminDeletePassword {
 		return
 	}
-	s.Repository.DeleteAllExpiresAtBefore(time.Now().UnixMilli())
+	s.Repository.DeleteAllExpiresAtBefore(time.Now().Unix())
 }
 
 func (s *Service) DeleteTopByPublicId(id string, password string) {
-	if AdminDeletePassword == "" || password != AdminDeletePassword {
+	if EnvAdminDeletePassword == "" || password != EnvAdminDeletePassword {
 		return
 	}
 	s.Repository.DeleteByPublicId(id)

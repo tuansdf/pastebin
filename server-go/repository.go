@@ -17,13 +17,13 @@ type Repository struct {
 }
 
 func (r *Repository) Create(v Vault) error {
-	query := `INSERT INTO vault (public_id, content, expires_at) VALUES (?, ?, ?)`
+	query := `INSERT INTO vault (public_id, content, expires_at) VALUES ($1, $2, $3)`
 	_, err := r.DB.Exec(query, v.PublicId, v.Content, v.ExpiresAt)
 	return err
 }
 
 func (r *Repository) FindTopByPublicId(id string) (*Vault, error) {
-	query := `SELECT public_id, content FROM vault WHERE public_id = ? LIMIT 1`
+	query := `SELECT public_id, content FROM vault WHERE public_id = $1 LIMIT 1`
 	row := r.DB.QueryRow(query, id)
 
 	var v Vault
@@ -38,16 +38,16 @@ func (r *Repository) FindTopByPublicId(id string) (*Vault, error) {
 }
 
 func (r *Repository) DeleteByPublicId(id string) error {
-	_, err := r.DB.Exec(`DELETE FROM vault WHERE public_id = ?`, id)
+	_, err := r.DB.Exec(`DELETE FROM vault WHERE public_id = $1`, id)
 	return err
 }
 
 func (r *Repository) DeleteById(id int64) error {
-	_, err := r.DB.Exec(`DELETE FROM vault WHERE id = ?`, id)
+	_, err := r.DB.Exec(`DELETE FROM vault WHERE id = $1`, id)
 	return err
 }
 
 func (r *Repository) DeleteAllExpiresAtBefore(timestamp int64) error {
-	_, err := r.DB.Exec(`DELETE FROM vault WHERE expires_at < ?`, timestamp)
+	_, err := r.DB.Exec(`DELETE FROM vault WHERE expires_at < $1`, timestamp)
 	return err
 }
