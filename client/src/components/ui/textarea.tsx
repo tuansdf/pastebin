@@ -3,12 +3,11 @@ import { ComponentProps, Show, splitProps } from "solid-js";
 
 type Props = {
   letterCount?: number;
-  maxLetterCount?: number;
   errorMessage?: string;
 } & ComponentProps<"textarea">;
 
 export const Textarea = (props: Props) => {
-  const [local, others] = splitProps(props, ["class", "errorMessage", "letterCount", "maxLetterCount"]);
+  const [local, others] = splitProps(props, ["class", "errorMessage", "letterCount"]);
 
   return (
     <div>
@@ -21,7 +20,7 @@ export const Textarea = (props: Props) => {
           <Show when={local.letterCount === 0 || local.letterCount}>
             <span classList={{ "text-secondary fs-6": true, "text-danger": !!local.errorMessage }}>
               {local.letterCount}
-              <Show when={local.maxLetterCount}>{`/${local.maxLetterCount}`}</Show>
+              <Show when={others.maxLength}>{`/${others.maxLength}`}</Show>
             </span>
           </Show>
         </div>

@@ -13,8 +13,8 @@ import {
   EXPIRES_TIME_1_HOUR,
   EXPIRES_TIME_1_MONTH,
   EXPIRES_TIME_1_WEEK,
-  MAX_CONTENT_LENGTH,
 } from "@/constants/common.constant.ts";
+import { MAX_CONTENT_LENGTH } from "@/constants/env.constant.js";
 import { validateUrl } from "@/utils/common.util.ts";
 import { encryptText, generatePassword } from "@/utils/crypto.util.ts";
 import { A } from "@solidjs/router";
@@ -117,7 +117,6 @@ export function CreateNotePage() {
                 required
                 errorMessage={errors().content}
                 letterCount={content().length}
-                maxLetterCount={MAX_CONTENT_LENGTH}
                 placeholder="Write your notes here..."
               />
               <div class="d-flex justify-content-between mt-2 gap-2">
