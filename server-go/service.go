@@ -11,7 +11,7 @@ type Service struct {
 }
 
 func (s *Service) Create(content string, idSize int, expireMinutes int, password string) (string, error) {
-	if EnvAdminCreatePassword != "" && password != EnvAdminCreatePassword {
+	if EnvApiKeyCreate != "" && password != EnvApiKeyCreate {
 		return "", errors.New("something went wrong")
 	}
 
@@ -44,20 +44,21 @@ func (s *Service) FindTopByPublicId(id string) (*Vault, error) {
 		return nil, err
 	}
 	if vault.ExpiresAt != 0 && vault.ExpiresAt < time.Now().UnixMilli() {
+		s.Repository.DeleteByPublicId(id)
 		return nil, nil
 	}
 	return vault, nil
 }
 
 func (s *Service) DeleteExpiredVaults(password string) {
-	if EnvAdminDeletePassword == "" || password != EnvAdminDeletePassword {
+	if EnvApiKeyDelete == "" || password != EnvApiKeyDelete {
 		return
 	}
 	s.Repository.DeleteAllExpiresAtBefore(time.Now().Unix())
 }
 
 func (s *Service) DeleteTopByPublicId(id string, password string) {
-	if EnvAdminDeletePassword == "" || password != EnvAdminDeletePassword {
+	if EnvApiKeyDelete == "" || password != EnvApiKeyDelete {
 		return
 	}
 	s.Repository.DeleteByPublicId(id)
