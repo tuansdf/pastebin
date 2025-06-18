@@ -70,7 +70,7 @@ export function CreateNotePage() {
     try {
       setIsLoading(true);
       const password = generatePassword();
-      const encrypted = await encryptText(content(), password);
+      const encrypted = await encryptText(content().trim(), password);
       const data = await createVault(
         {
           content: encrypted,
