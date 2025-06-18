@@ -1,15 +1,13 @@
 import { getVaultAndDecryptContent } from "@/api/vault.api.ts";
 import { Alert } from "@/components/ui/alert.tsx";
-import { Button } from "@/components/ui/button.js";
+import { CopyButton } from "@/components/ui/copy-button.js";
 import { ScreenLoading } from "@/components/ui/screen-loading.tsx";
 import { DEFAULT_ERROR_MESSAGE } from "@/constants/common.constant.ts";
 import { validateUrl } from "@/utils/common.util.ts";
 import { useParams } from "@solidjs/router";
-import { createResource, createSignal, Match, Show, Switch } from "solid-js";
+import { createResource, Match, Show, Switch } from "solid-js";
 
 export const UrlDetail = () => {
-  let debRef: ReturnType<typeof setTimeout> | undefined;
-  const [copied, setCopied] = createSignal(false);
   const params = useParams<{ id?: string }>();
   const [content] = createResource(() => getVaultAndDecryptContent(params.id));
 
@@ -28,22 +26,6 @@ export const UrlDetail = () => {
     }
   };
 
-  const handleCopy = async () => {
-    try {
-      if (debRef) {
-        clearTimeout(debRef);
-      }
-      if (!content()) return;
-      setCopied(true);
-      await navigator.clipboard.writeText(content()!);
-      debRef = setTimeout(() => {
-        setCopied(false);
-      }, 1000);
-    } catch (e) {
-      console.error("Failed to copy URL to clipboard", e);
-    }
-  };
-
   return (
     <>
       <Switch>
@@ -59,12 +41,7 @@ export const UrlDetail = () => {
             <a class="btn btn-primary mt-3" href={content()}>
               Visit {targetUrlDomain()}
             </a>
-            <Button variant="dark" class="mt-1" onClick={handleCopy} disabled={copied()}>
-              <Switch>
-                <Match when={!copied()}>Click to copy</Match>
-                <Match when={copied()}>Copied to clipboard!</Match>
-              </Switch>
-            </Button>
+            <CopyButton variant="dark" class="mt-1" content={content()} />
           </div>
         </Match>
       </Switch>
